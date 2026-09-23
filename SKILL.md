@@ -158,6 +158,26 @@ safety -- fetch it from the prior call's result rather than guessing or
 omitting it, and use the fresh `revision_id` each call returns for the
 next one.
 
+**Known tool limitation -- no cell-formatting API.** The Google Sheets by
+Workato MCP tools (as of this writing) only expose row/value operations
+(`append_rows`, `update_range_values`, `add_sheet`/`rename_sheet`/etc.) --
+there's no operation for bold, wrap-text, frozen rows, or column width.
+Don't attempt to call one; it doesn't exist, and guessing at undocumented
+parameters isn't safe. Checked the connector directory for an alternative
+before writing this -- none currently exposes formatting either. Work
+around it instead:
+- Write each **Feedback** cell with embedded line breaks (`\n`) separating
+  the `[Track]` prefix, the finding, and the suggested fix onto their own
+  lines, rather than one run-on sentence. Sheets renders literal line
+  breaks inside a cell regardless of wrap formatting, so this reads
+  cleanly without needing the missing format call.
+- Tell the person the sheet is otherwise unformatted (no bold header, no
+  frozen row, default column widths) and that a quick manual pass --
+  select all, Format > Text wrapping > Wrap, freeze row 1, bold row 1 --
+  finishes the polish in a few clicks. Don't silently skip mentioning this.
+- If a more capable Sheets connector is ever connected in a given
+  environment, prefer it for this step instead.
+
 1. Create a new spreadsheet titled `Lab Feedback -- <guide name> -- <today's date>`,
    with two tabs:
    - **Lab Feedback** -- headers exactly as above.
@@ -168,11 +188,16 @@ next one.
      `1.2.3`, or free text like `Recipe: lead-sync` for Bug -- Lab findings
      that aren't tied to a guide section -- the template already mixes both
      styles).
-   - `Feedback` -- `[<Track>] <finding>. Suggested fix: <fix>.` in one cell
-     -- e.g. `[Bug -- Discrepancy] Guide maps Issue Key from the trigger,
-     but the recipe maps it from the Jira Search step. Suggested fix:
-     update the mapping to pull from the trigger.` For **Bug -- Lab**
-     findings, use the linter's own message rather than rewording it.
+   - `Feedback` -- `[<Track>]\n<finding>.\nSuggested fix: <fix>.` -- three
+     lines within one cell (see the line-break note in Step 5's intro) --
+     e.g.:
+     ```
+     [Bug -- Discrepancy]
+     Guide maps Issue Key from the trigger, but the recipe maps it from the Jira Search step.
+     Suggested fix: update the mapping to pull from the trigger.
+     ```
+     For **Bug -- Lab** findings, use the linter's own message rather than
+     rewording it.
    - `Section Time` -- leave blank. It's for human time-to-complete data,
      not applicable to an automated pass.
    - `Reported By` -- the fixed string `auditing-lab-guides (automated)`,
