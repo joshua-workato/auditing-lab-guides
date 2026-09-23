@@ -1,0 +1,6 @@
+{
+  "_note": "Simplified stand-in for what `wk pull` produces -- not a verified byte-exact Workato schema. Tests the skill's decision logic, not JSON parsing fidelity.",
+  "project_name": "Lead Routing Starter",
+  "connections_folder": "[Lead Router] Connections",
+  "connections": ["Gmail", "Jira", "Asana"]
+}

@@ -1,0 +1,16 @@
+{
+  "_note": "Simplified stand-in for workato-devs/recipe-skills' skills/jira-recipes/lint-rules.json -- only enough entries to exercise the test, not a real audited action list.",
+  "connector": "jira",
+  "actions": [
+    "search_issues",
+    "search_issues_soql",
+    "create_issue",
+    "update_issue",
+    "add_comment",
+    "get_issue"
+  ],
+  "triggers": [
+    "new_updated_issue",
+    "new_issue"
+  ]
+}

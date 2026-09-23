@@ -84,7 +84,11 @@ project/connection/folder) and classify it:
 
 **Evaluate in order, stop at first match:**
 
-1. **Claim is about a connector's action/trigger/field name existing.**
+1. **Claim names a specific connector action/trigger** (e.g. "add a Jira
+   'Update Issue Priority' action"). If the guide only describes generic
+   behavior without naming an action ("add a Slack action and set these
+   fields") there's no name to validate -- skip to branch 3 instead, since
+   what matters there is whether the step exists, not what it's called.
    Run `scripts/find_connector_skill.sh <recipe-skills-checkout> <connector>`.
    - `lint-rules.json` found for that connector:
      - Name exists as claimed → no finding.
@@ -108,7 +112,10 @@ project/connection/folder) and classify it:
    - Missing or name mismatch → **Bug -- Discrepancy**.
 
 3. **Claim references a field/datapill sourced from a specific step** (e.g.
-   "map the Issue Key from the trigger" / "from the search step").
+   "map the Issue Key from the trigger" / "from the search step"), or sets
+   field *values* on a step the guide never gave a specific action name to
+   (e.g. "add a Slack action, set channel to X, username to Y" -- routed
+   here rather than branch 1, since there's no action name to validate).
    - Does that step already exist in the pulled project (i.e. it's part of
      the pre-built starter scaffold, not something the attendee builds
      later in the lab)?
@@ -118,7 +125,10 @@ project/connection/folder) and classify it:
          schema).
      - No (the step doesn't exist yet in the starter project) →
        **Unverifiable**. Do not guess whether the guide's instruction is
-       correct -- there is no ground truth to check it against.
+       correct -- there is no ground truth to check it against. This
+       applies to every field claim about that step, not just the first
+       one -- don't stop checking after finding one Unverifiable claim
+       about a not-yet-built step.
 
 4. **Claim is about wording, structure, or explanation rather than a
    verifiable fact** → this belongs to Pass 1 (Step 3), not here.
