@@ -35,3 +35,14 @@ not the other way around.
    has no equivalent.
 9. **Suggestion -- Presentation.** Exercise B step 3 lists four
    field/value pairs in prose; reads faster as a table.
+
+## Actual dry-run results (2026-09-23)
+
+Live sheet: https://docs.google.com/spreadsheets/d/1pEybZ0Gm_u4uo7r_9jbYeREpurGuWLqddgc7VLJyZbA/edit
+
+8 of 9 planted issues caught (all except the confirmed non-findings, which
+correctly produced no finding). One issue -- unnamed Slack action field
+claims -- was found by the audit but missing from this answer key; fixed
+in SKILL.md (decision tree branch 1/3 gap) and in this doc. Also confirmed:
+`append_rows`/`update_range_values` on the Google Sheets by Workato MCP
+connector require `required_revision_id`; documented in SKILL.md Step 5.

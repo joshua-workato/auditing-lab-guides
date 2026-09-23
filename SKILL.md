@@ -152,6 +152,12 @@ create-spreadsheet / append-rows tools). If no Google Sheets tool is
 available, say so and fall back to the markdown table in
 `references/output-sheet-format.md` instead of silently doing nothing.
 
+Note: append/update calls on this connector require a `required_revision_id`
+(the `revision_id` from the create/most recent response) for concurrency
+safety -- fetch it from the prior call's result rather than guessing or
+omitting it, and use the fresh `revision_id` each call returns for the
+next one.
+
 1. Create a new spreadsheet titled `Lab Feedback -- <guide name> -- <today's date>`,
    with two tabs:
    - **Lab Feedback** -- headers exactly as above.
