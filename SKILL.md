@@ -65,7 +65,18 @@ Confirm before proceeding:
    -- check for this before assuming a single file is the whole guide.
 2. A `wk` project directory targeting the starter project. If none exists
    yet, run `wk init` against the workspace the guide is written for (this
-   skill assumes `wk` is already installed and authenticated).
+   skill assumes `wk` is already installed and authenticated). To know
+   *which* project/folder to declare, ask the person for the exact
+   project or folder **name** as it appears in Workato, or the **full**
+   browser URL to the folder (not just a `fid=...` fragment copied out of
+   it) -- the full URL at least confirms the workspace. A bare folder id
+   with no name or URL context is expensive to resolve: it can require
+   walking the entire folder tree (`scripts/resolve_folder_id.sh <fid>`
+   does this, but it's a fallback, not the first thing to reach for) and
+   can fail entirely if the id belongs to a workspace/profile you're not
+   authenticated against, or the active profile can't see it. Don't
+   silently start guessing folder names to try `wk init --verify` against
+   -- ask instead.
 3. A local checkout of `github.com/workato-devs/recipe-skills`. If missing,
    clone it: `git clone https://github.com/workato-devs/recipe-skills.git`.
 4. The **Topic** label for this run -- the lab/course code this guide
