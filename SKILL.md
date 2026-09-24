@@ -45,6 +45,12 @@ stalling mid-audit on a missing dependency:
   copy. Step 5 has a documented (less ideal) fallback for a missing Drive
   tool, so don't treat its absence as blocking the way a missing Sheets
   tool is -- just tell the person the output won't be pre-formatted.
+- Read access to the shared template file (Step 5 has its id) -- it's
+  shared at the team level (link-shared or via a team group), not tied to
+  one person's account, so this should already work for anyone on the
+  team without extra setup. If copying it fails with a permissions error,
+  that's a sharing gap to raise with whoever owns the template, not
+  something to route around with a personal copy.
 - The **Topic** label decided (see Step 1.4).
 
 # Core Workflow
@@ -234,12 +240,17 @@ don't silently skip mentioning this.
 - If a more capable Sheets connector is ever connected in a given
   environment, prefer it for this step instead.
 
-1. Find the template: search Drive for a spreadsheet titled exactly
-   "Lab Feedback Template (blank)" (owned by the team, not a personal
-   copy) rather than assuming a single fixed file id -- IDs can change if
-   the template is ever recreated. If more than one candidate turns up, or
-   none does, confirm with the person before proceeding rather than
-   guessing which is authoritative or silently falling back to a blank
+1. Find the template. It's a known, shared file so use its id directly
+   rather than searching each run:
+   `1LCRe69QVR9FbMcOH7GiCMLcd9CJWdzKh0JKAQBbwGHQ`
+   ("Lab Feedback Template (blank)", link:
+   https://docs.google.com/spreadsheets/d/1LCRe69QVR9FbMcOH7GiCMLcd9CJWdzKh0JKAQBbwGHQ/edit ).
+   This id can go stale if the template is ever deleted/recreated -- if
+   copying it 404s or errors, don't guess a replacement: fall back to
+   searching Drive for a spreadsheet titled exactly "Lab Feedback Template
+   (blank)" (owned by the team, not a personal copy), and if more than one
+   candidate turns up or none does, confirm with the person before
+   proceeding rather than silently falling back to a blank
    `create_spreadsheet`.
 2. Copy it (Drive copy-file), titled `Lab Feedback -- <guide name> --
    <today's date>`. If the person has said where it should live, pass that
