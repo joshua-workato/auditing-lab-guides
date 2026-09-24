@@ -13,6 +13,12 @@
 #                   into it before calling this script.
 set -euo pipefail
 PROJECT_DIR="${1:?Usage: pull_and_lint.sh <project-dir>}"
+
+if ! command -v wk >/dev/null 2>&1; then
+  echo "wk CLI not found on PATH. Install and authenticate it first (see your team's wk setup guide) before running this script." >&2
+  exit 1
+fi
+
 cd "$PROJECT_DIR"
 
 echo "== wk auth status ==" >&2

@@ -7,11 +7,21 @@
 #
 # If no checkout exists yet: git clone https://github.com/workato-devs/recipe-skills.git
 #
-# Usage: find_connector_skill.sh <recipe-skills-checkout> <connector-name>
+# Usage: find_connector_skill.sh [<recipe-skills-checkout>] <connector-name>
 #   e.g. find_connector_skill.sh ./recipe-skills jira
+#   or, with $RECIPE_SKILLS_DIR exported once: find_connector_skill.sh jira
 set -euo pipefail
-REPO="${1:?Usage: find_connector_skill.sh <recipe-skills-checkout> <connector-name>}"
-CONNECTOR="${2:?Usage: find_connector_skill.sh <recipe-skills-checkout> <connector-name>}"
+
+if [ $# -eq 1 ]; then
+  REPO="${RECIPE_SKILLS_DIR:?Usage: find_connector_skill.sh <connector-name> requires \$RECIPE_SKILLS_DIR to be set, or pass the checkout path explicitly: find_connector_skill.sh <recipe-skills-checkout> <connector-name>}"
+  CONNECTOR="$1"
+elif [ $# -eq 2 ]; then
+  REPO="$1"
+  CONNECTOR="$2"
+else
+  echo "Usage: find_connector_skill.sh [<recipe-skills-checkout>] <connector-name>  (checkout path can be omitted if \$RECIPE_SKILLS_DIR is set)" >&2
+  exit 1
+fi
 
 MATCH=$(find "$REPO/skills" -maxdepth 1 -type d -iname "${CONNECTOR}-recipes" 2>/dev/null | head -1)
 

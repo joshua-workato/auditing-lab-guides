@@ -27,6 +27,22 @@ This skill:
 - ❌ Is not a recurring or scheduled check. Run it fresh each time a human
   asks -- it does not monitor for platform drift over time.
 
+# Prerequisites
+
+Have these ready *before* starting a run -- checking them up front avoids
+stalling mid-audit on a missing dependency:
+- This skill repo up to date (`git pull`) -- fixes from previous audits
+  (decision-tree gaps, tool quirks) land here first.
+- `wk` installed and authenticated against the target workspace/environment/
+  region, with the `recipe-lint` plugin installed
+  (`wk plugins install recipe-lint`).
+- A local checkout of `github.com/workato-devs/recipe-skills`. Optionally
+  export its path once as `RECIPE_SKILLS_DIR` so you don't have to pass it
+  to `scripts/find_connector_skill.sh` on every run.
+- A Google Sheets tool connected in this environment. Treat this as
+  required, not optional, for team/shared audits -- see the note in Step 5.
+- The **Topic** label decided (see Step 1.4).
+
 # Core Workflow
 
 ## Step 1: Gather inputs
@@ -45,7 +61,9 @@ Confirm before proceeding:
 4. The **Topic** label for this run -- the lab/course code this guide
    belongs to (e.g. "WEL", "DM", "MCP 201"). This becomes the Topic column
    value for every row this run writes to the output sheet. Ask if not
-   given; don't invent one.
+   given; don't invent one. If prior runs exist for this lab/course in the
+   team's Lab Feedback tracker, match their exact spelling/casing rather
+   than introducing a new variant.
 
 If any of these are missing or ambiguous, ask -- don't guess at a project
 path or assume which workspace/profile is active.
@@ -151,6 +169,13 @@ Use whichever Google Sheets tool is available in the current environment
 create-spreadsheet / append-rows tools). If no Google Sheets tool is
 available, say so and fall back to the markdown table in
 `references/output-sheet-format.md` instead of silently doing nothing.
+
+**For team/shared audits, treat the Sheets tool as required, not optional.**
+Check for it during Step 1 (Prerequisites) and flag its absence *before*
+running the audit, not after -- a markdown table that has to be manually
+transcribed into the shared tracker later is a worse outcome for a
+regularly-run, multi-person workflow than pausing up front to get the
+connector added.
 
 Note: append/update calls on this connector require a `required_revision_id`
 (the `revision_id` from the create/most recent response) for concurrency
