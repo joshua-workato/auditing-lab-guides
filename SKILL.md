@@ -39,10 +39,12 @@ stalling mid-audit on a missing dependency:
 - A local checkout of `github.com/workato-devs/recipe-skills`. Optionally
   export its path once as `RECIPE_SKILLS_DIR` so you don't have to pass it
   to `scripts/find_connector_skill.sh` on every run.
-- A Google Sheets tool *and* a Drive tool (for copying the Lab Feedback
-  template, so output is well-formatted every run) connected in this
-  environment. Treat these as required, not optional, for team/shared
-  audits -- see the note in Step 5.
+- A Google Sheets tool connected in this environment -- required, not
+  optional, for team/shared audits (see the note in Step 5). A Drive tool
+  too, ideally: it's what makes output well-formatted via the template
+  copy. Step 5 has a documented (less ideal) fallback for a missing Drive
+  tool, so don't treat its absence as blocking the way a missing Sheets
+  tool is -- just tell the person the output won't be pre-formatted.
 - The **Topic** label decided (see Step 1.4).
 
 # Core Workflow
@@ -182,10 +184,13 @@ regularly-run, multi-person workflow than pausing up front to get the
 connector added.
 
 Note: append/update calls on this connector require a `required_revision_id`
-(the `revision_id` from the create/most recent response) for concurrency
-safety -- fetch it from the prior call's result rather than guessing or
-omitting it, and use the fresh `revision_id` each call returns for the
-next one.
+for concurrency safety -- fetch it from the prior call's result rather
+than guessing or omitting it, and use the fresh `revision_id` each call
+returns for the next one. Since the new sheet now comes from a Drive
+copy-file call (see below), not `create_spreadsheet`, there is no
+`revision_id` to seed from that response -- a Drive File object doesn't
+carry one. Call `get_spreadsheet_info` on the new copy immediately after
+copying to obtain the initial `revision_id` before the first Sheets write.
 
 **Known tool limitation -- no cell-formatting API.** The Google Sheets by
 Workato MCP tools (as of this writing) only expose row/value operations
@@ -237,14 +242,21 @@ don't silently skip mentioning this.
    guessing which is authoritative or silently falling back to a blank
    `create_spreadsheet`.
 2. Copy it (Drive copy-file), titled `Lab Feedback -- <guide name> --
-   <today's date>`, with no destination folder specified -- an unspecified
-   parent keeps the copy alongside the template rather than at the Drive
-   root, satisfying the "no sprawl" rule without extra steps. If the person
-   has said where it should live instead, honor that.
-3. The copy already has the right headers, formatting, and both the
-   **Lab Feedback** and **Coverage** tabs, with no data rows to clear --
-   the blank template was pre-cleaned for exactly this. Go straight to
-   appending findings.
+   <today's date>`. If the person has said where it should live, pass that
+   as the destination folder. Otherwise leave the destination unspecified
+   -- Drive's copy-file tool then places the copy in the template's own
+   folder *only if you have write access there*; if you don't, it silently
+   falls back to your own Drive root instead of erroring. Don't assume the
+   "no sprawl" rule was satisfied just because you didn't specify a
+   folder: check the copy's returned `parentId` matches the template's
+   folder, and if it doesn't, tell the person where it actually landed and
+   ask whether to move it rather than leaving it wherever it silently
+   defaulted to.
+3. Call `get_spreadsheet_info` on the new copy to get its initial
+   `revision_id` (see the note above) and the `Lab Feedback`/`Coverage`
+   sheet ids -- both tabs and all formatting are already there, and there
+   are no data rows to clear, since the blank template was pre-cleaned for
+   exactly this. Go straight to appending findings.
 4. Append one row per finding to **Lab Feedback**:
    - `Topic` -- the Topic label gathered in Step 1 (same for every row).
    - `Section Number / Part` -- the location (a guide section number like
