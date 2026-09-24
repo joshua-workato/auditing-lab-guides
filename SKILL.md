@@ -39,8 +39,10 @@ stalling mid-audit on a missing dependency:
 - A local checkout of `github.com/workato-devs/recipe-skills`. Optionally
   export its path once as `RECIPE_SKILLS_DIR` so you don't have to pass it
   to `scripts/find_connector_skill.sh` on every run.
-- A Google Sheets tool connected in this environment. Treat this as
-  required, not optional, for team/shared audits -- see the note in Step 5.
+- A Google Sheets tool *and* a Drive tool (for copying the Lab Feedback
+  template, so output is well-formatted every run) connected in this
+  environment. Treat these as required, not optional, for team/shared
+  audits -- see the note in Step 5.
 - The **Topic** label decided (see Step 1.4).
 
 # Core Workflow
@@ -164,11 +166,13 @@ the org's existing Lab Feedback template shape exactly:
 
 **Columns (in this order):** `Topic | Section Number / Part | Feedback | Section Time | Reported By | Status`
 
-Use whichever Google Sheets tool is available in the current environment
-(e.g. in this workspace, the "Google Sheets by Workato MCP" connector's
-create-spreadsheet / append-rows tools). If no Google Sheets tool is
-available, say so and fall back to the markdown table in
-`references/output-sheet-format.md` instead of silently doing nothing.
+Use whichever Google Sheets and Drive tools are available in the current
+environment (e.g. in this workspace, the "Google Sheets by Workato MCP"
+connector's append-rows/update-range/add-sheet tools, plus a Drive
+connector's copy-file tool -- see the template-duplication steps below).
+If no Google Sheets tool is available, say so and fall back to the
+markdown table in `references/output-sheet-format.md` instead of silently
+doing nothing.
 
 **For team/shared audits, treat the Sheets tool as required, not optional.**
 Check for it during Step 1 (Prerequisites) and flag its absence *before*
@@ -189,25 +193,59 @@ Workato MCP tools (as of this writing) only expose row/value operations
 there's no operation for bold, wrap-text, frozen rows, or column width.
 Don't attempt to call one; it doesn't exist, and guessing at undocumented
 parameters isn't safe. Checked the connector directory for an alternative
-before writing this -- none currently exposes formatting either. Work
-around it instead:
+before writing this -- none currently exposes formatting either.
+
+**The fix is to never create a blank spreadsheet for this.** Instead,
+duplicate an already-formatted, empty Drive file, titled
+**"Lab Feedback Template (blank)"** (Sheets by Workato MCP has no
+cross-file copy of its own, but the Drive connector's copy-file tool does
+a full Drive-level copy, which preserves the source's formatting
+byte-for-byte). This produces a well-formatted sheet -- headers, whatever
+polish the template already has, and both the **Lab Feedback** and
+**Coverage** tabs pre-created -- on every run, without needing a
+formatting API at all.
+
+Don't confuse this with the similarly-named **"Lab feedback template"**
+(no "(blank)" suffix, lowercase "feedback") -- that file is the org's
+*historical, real* Lab Feedback tracker (accumulated tester rows across
+courses), not a disposable per-run source. It's useful as a reference for
+what real feedback looks like, but never duplicate it directly -- doing so
+would carry real human feedback history into every new run's copy. The
+blank template was itself derived from it once (copied, then every data
+row below the header cleared) -- if the blank template ever needs
+regenerating, repeat that derivation rather than writing into either file
+in place.
+
+If a Drive connector isn't available in the current environment, fall back
+to a blank `create_spreadsheet` and tell the person explicitly that the
+sheet is unformatted and a quick manual pass (select all, Format > Text
+wrapping > Wrap, freeze row 1, bold row 1) would finish the polish --
+don't silently skip mentioning this.
 - Write each **Feedback** cell with embedded line breaks (`\n`) separating
   the `[Track]` prefix, the finding, and the suggested fix onto their own
   lines, rather than one run-on sentence. Sheets renders literal line
   breaks inside a cell regardless of wrap formatting, so this reads
-  cleanly without needing the missing format call.
-- Tell the person the sheet is otherwise unformatted (no bold header, no
-  frozen row, default column widths) and that a quick manual pass --
-  select all, Format > Text wrapping > Wrap, freeze row 1, bold row 1 --
-  finishes the polish in a few clicks. Don't silently skip mentioning this.
+  cleanly without needing a format call.
 - If a more capable Sheets connector is ever connected in a given
   environment, prefer it for this step instead.
 
-1. Create a new spreadsheet titled `Lab Feedback -- <guide name> -- <today's date>`,
-   with two tabs:
-   - **Lab Feedback** -- headers exactly as above.
-   - **Coverage** -- headers `Metric | Value`.
-2. Append one row per finding to **Lab Feedback**:
+1. Find the template: search Drive for a spreadsheet titled exactly
+   "Lab Feedback Template (blank)" (owned by the team, not a personal
+   copy) rather than assuming a single fixed file id -- IDs can change if
+   the template is ever recreated. If more than one candidate turns up, or
+   none does, confirm with the person before proceeding rather than
+   guessing which is authoritative or silently falling back to a blank
+   `create_spreadsheet`.
+2. Copy it (Drive copy-file), titled `Lab Feedback -- <guide name> --
+   <today's date>`, with no destination folder specified -- an unspecified
+   parent keeps the copy alongside the template rather than at the Drive
+   root, satisfying the "no sprawl" rule without extra steps. If the person
+   has said where it should live instead, honor that.
+3. The copy already has the right headers, formatting, and both the
+   **Lab Feedback** and **Coverage** tabs, with no data rows to clear --
+   the blank template was pre-cleaned for exactly this. Go straight to
+   appending findings.
+4. Append one row per finding to **Lab Feedback**:
    - `Topic` -- the Topic label gathered in Step 1 (same for every row).
    - `Section Number / Part` -- the location (a guide section number like
      `1.2.3`, or free text like `Recipe: lead-sync` for Bug -- Lab findings
@@ -229,16 +267,11 @@ around it instead:
      so these rows are never mistaken for a human tester's entry.
    - `Status` -- leave blank, matching the template's existing convention
      for untriaged rows.
-3. Append one row per metric to **Coverage**: total Workato-specific claims
+5. Append one row per metric to **Coverage**: total Workato-specific claims
    found, how many were checked against connector reference data, how many
    against pre-built project state, and how many came back Unverifiable.
-4. Report the new spreadsheet's URL back -- that's the deliverable, not a
+6. Report the new spreadsheet's URL back -- that's the deliverable, not a
    restated copy of the findings in chat.
-
-If a Drive connector is also available and the person hasn't said where
-the sheet should live, ask rather than leaving it wherever it defaults to
-(e.g. offer to place it alongside the template rather than at the Drive
-root).
 
 Include the Coverage tab even when there are zero findings in Lab Feedback
 -- a clean report on a mostly-unverifiable guide should not look identical
