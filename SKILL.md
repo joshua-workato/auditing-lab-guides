@@ -119,9 +119,16 @@ non-Workato system (login flow, mock app navigation, generic UI orientation)
 -- if so, skip it entirely, it's out of scope. Otherwise extract the
 Workato-specific claim (a named connector + action/trigger, a named
 field/datapill + the step it's claimed to come from, a named
-project/connection/folder) and classify it:
+project/connection/folder) and classify it using **4a**. Separately, run
+**4b**'s checks against every relevant pre-built step regardless of what
+the guide's prose claims -- the two sections are independent passes, not
+alternative branches of one decision: a single step can trigger a finding
+from both, and reaching a match in 4a never excuses skipping 4b for that
+same step.
 
-**Evaluate in order, stop at first match:**
+### 4a. Per-claim classification -- evaluate in order, stop at first match
+
+These branches classify one claim the guide's prose actually makes.
 
 1. **Claim names a specific connector action/trigger** (e.g. "add a Jira
    'Update Issue Priority' action"). If the guide only describes generic
@@ -190,11 +197,21 @@ Unverifiable:
   confirmed some other way (e.g. comparing against another learner's
   folder in the same shared project, or asking the requester directly).
 
-4. **Claim is implicit in a step's own input schema, not stated anywhere
-   in the guide's prose** -- specifically, a required (non-optional) field
-   on a pre-built step's input schema, checked against the guide's own
-   sample dataset that step is wired to. This doesn't need the guide to
-   say anything wrong; the contradiction is between two things the guide
+4. **Claim is about wording, structure, or explanation rather than a
+   verifiable fact** → this belongs to Pass 1 (Step 3), not here.
+
+### 4b. Systematic per-step sweep -- run every check below against every
+relevant pre-built step, independent of whether 4a matched anything for
+that step and independent of whether the guide's prose makes any claim
+these checks could be said to verify. These are not alternative
+classifications of one claim -- they're separate, always-applicable
+checks, so there's no "stop at first match" here: a step can trigger more
+than one of them at once.
+
+1. **Required field vs. sample data.** A required (non-optional) field on
+   a pre-built step's input schema, checked against the guide's own sample
+   dataset that step is wired to. This doesn't need the guide to say
+   anything wrong; the contradiction is between two things the guide
    itself provides, and it's a common recurring failure mode (a required
    field left blank on one sample record breaks every step downstream that
    shares the same sample data, not just one).
@@ -209,14 +226,15 @@ Unverifiable:
          fail validation the moment the step runs against the full array,
          not just on that one record.
 
-5. **Guide narrates a "try this" experiment or worked behavior tied to a
-   specific data condition** (e.g. "delete this filter and a blank-email
-   record now survives," "swap `first(g)` for `last(g)` and the other
-   duplicate wins") -- this presupposes that condition actually exists
-   somewhere in the guide's own stated sample data. This is distinct from
-   branch 4: branch 4 checks a schema's required-ness against the sample
-   data; this checks whether the guide's own *narrative* is coherent with
-   its own data, independent of any schema question.
+2. **Narrative vs. sample data.** The guide narrates a "try this"
+   experiment or worked behavior tied to a specific data condition (e.g.
+   "delete this filter and a blank-email record now survives," "swap
+   `first(g)` for `last(g)` and the other duplicate wins") -- this
+   presupposes that condition actually exists somewhere in the guide's own
+   stated sample data. Distinct from check 1: that one checks a schema's
+   required-ness against the sample data; this checks whether the guide's
+   own *narrative* is coherent with its own data, independent of any
+   schema question.
    - Does the guide's own sample dataset (the one the relevant step is
      wired to) actually contain a record matching the condition the
      experiment describes (a blank/duplicate/edge-case value, etc.)?
@@ -225,26 +243,38 @@ Unverifiable:
        demonstrate what it claims to; cite the missing condition and what
        the guide's own sample data actually contains instead.
 
-6. **Guide frames a step as an exercise the learner writes** (a code body,
-   a formula, a field mapping) -- check whether the pre-built step's
-   *actual content* is already a complete, working solution, not just
-   whether its output schema is declared (a schema being pre-filled is a
-   separate, independent thing to check -- see the scaffolding note above
-   branch 4). Do this for every exercise step, not only ones the guide
-   happens to make a separate claim about, since this can't be inferred
-   from the guide's prose alone.
-   - Is the step's actual code/formula body still placeholder/hint text
-     (comments, blanks, prose instructions) matching an unsolved state?
-     - Yes → no finding, consistent with "the learner builds this."
-     - No (it's a complete, runnable solution already in place) →
-       **Bug -- Discrepancy** -- the guide frames this as something to
-       build, but it arrives solved. Cite the step, and note whether
-       neighboring exercise steps are genuinely still blank (suggesting
-       this one specifically is scaffolding/leftover, not a pattern
-       applied to the whole recipe).
-
-7. **Claim is about wording, structure, or explanation rather than a
-   verifiable fact** → this belongs to Pass 1 (Step 3), not here.
+3. **Exercise content completeness.** The guide frames a step as an
+   exercise the learner writes (a code body, a formula, a field mapping).
+   Check whether the pre-built step's *actual content* is already a
+   complete, working solution -- independent of whether its output schema
+   is declared (schema state is a separate thing, covered by the
+   scaffolding note under 4a's branches 2/3). Do this for every exercise
+   step, not only ones the guide happens to make a separate claim about.
+   - Is the step explicitly framed as "given" / a worked example the
+     learner reads rather than writes (e.g. "this step is given -- open it
+     and read it")?
+     - Yes → complete, working content is expected here regardless of how
+       solved it looks. No finding.
+   - Not framed as given (the guide frames it as something the learner
+     builds) -- what does the step's actual code/formula body look like?
+     - Placeholder/hint text, blanks, or a partial attempt (some fields
+       filled, others left as blanks or TODO-style markers) → no finding.
+       Partial and empty both read as "not finished yet," which is the
+       expected in-progress state -- don't force this into a binary
+       blank-or-complete choice.
+     - A complete, runnable solution already in place → this is
+       **learner-authored content** in the same sense the scaffolding note
+       under 4a uses that term (a filled-in formula body / working code /
+       a completed mapping -- the opposite of that note's "scaffolding,"
+       which means an *empty*, labeled placeholder). Apply that note's
+       rule, not a new one: stay with **Unverifiable**, don't jump to Bug
+       -- Discrepancy, unless the environment's provenance can be
+       confirmed some other way (ask the requester directly, or compare
+       against another learner's folder in the same shared project). A
+       complete solution sitting where the guide expects unsolved work is
+       exactly as ambiguous as any other learner-authored content -- it
+       does not become more confirmable just because it's a full solution
+       rather than a partial one.
 
 Screenshots and other images: don't attempt to verify their content against
 the live Workato UI in either pass -- out of scope for v1, note it only if
