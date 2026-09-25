@@ -209,7 +209,41 @@ Unverifiable:
          fail validation the moment the step runs against the full array,
          not just on that one record.
 
-5. **Claim is about wording, structure, or explanation rather than a
+5. **Guide narrates a "try this" experiment or worked behavior tied to a
+   specific data condition** (e.g. "delete this filter and a blank-email
+   record now survives," "swap `first(g)` for `last(g)` and the other
+   duplicate wins") -- this presupposes that condition actually exists
+   somewhere in the guide's own stated sample data. This is distinct from
+   branch 4: branch 4 checks a schema's required-ness against the sample
+   data; this checks whether the guide's own *narrative* is coherent with
+   its own data, independent of any schema question.
+   - Does the guide's own sample dataset (the one the relevant step is
+     wired to) actually contain a record matching the condition the
+     experiment describes (a blank/duplicate/edge-case value, etc.)?
+     - Yes → no finding.
+     - No → **Bug -- Discrepancy** -- the experiment as written can't
+       demonstrate what it claims to; cite the missing condition and what
+       the guide's own sample data actually contains instead.
+
+6. **Guide frames a step as an exercise the learner writes** (a code body,
+   a formula, a field mapping) -- check whether the pre-built step's
+   *actual content* is already a complete, working solution, not just
+   whether its output schema is declared (a schema being pre-filled is a
+   separate, independent thing to check -- see the scaffolding note above
+   branch 4). Do this for every exercise step, not only ones the guide
+   happens to make a separate claim about, since this can't be inferred
+   from the guide's prose alone.
+   - Is the step's actual code/formula body still placeholder/hint text
+     (comments, blanks, prose instructions) matching an unsolved state?
+     - Yes → no finding, consistent with "the learner builds this."
+     - No (it's a complete, runnable solution already in place) →
+       **Bug -- Discrepancy** -- the guide frames this as something to
+       build, but it arrives solved. Cite the step, and note whether
+       neighboring exercise steps are genuinely still blank (suggesting
+       this one specifically is scaffolding/leftover, not a pattern
+       applied to the whole recipe).
+
+7. **Claim is about wording, structure, or explanation rather than a
    verifiable fact** → this belongs to Pass 1 (Step 3), not here.
 
 Screenshots and other images: don't attempt to verify their content against
