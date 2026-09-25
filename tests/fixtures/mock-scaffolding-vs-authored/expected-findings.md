@@ -71,3 +71,16 @@ It also correctly declined to guess on two narrative claims (5.2.2,
 marking them Unverifiable rather than fabricating a verdict, and raised
 one legitimate Presentation suggestion (5.3 skips the "why" that 5.2
 gives). Nothing fabricated or out of scope.
+
+## Regression re-run (2026-09-25, after broadening 4a branch 2)
+
+A code-review pass flagged that this fixture's expected finding didn't
+map onto any literal 4a branch -- branch 2 was "named
+project/connection/folder," branch 3 was "field sourced from a step,"
+and neither literally covers "guide says add a row that already
+exists." `SKILL.md`'s branch 2 was broadened to explicitly name this
+case. Re-ran blind with the updated skill text: **still PASS on both
+findings**, same classifications as before (Bug for the empty
+scaffolded row, Unverifiable for the complete formula) -- now via a
+direct branch match instead of analogizing from the scaffolding note's
+worked example.

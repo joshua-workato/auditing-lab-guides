@@ -46,3 +46,24 @@ claims -- was found by the audit but missing from this answer key; fixed
 in SKILL.md (decision tree branch 1/3 gap) and in this doc. Also confirmed:
 `append_rows`/`update_range_values` on the Google Sheets by Workato MCP
 connector require `required_revision_id`; documented in SKILL.md Step 5.
+
+## Regression re-run (2026-09-25, after broadening 4a branch 2)
+
+Re-ran as a blind fresh-agent regression check after editing `SKILL.md`'s
+4a branch 2 to explicitly cover "guide instructs adding a named asset
+that may already exist as scaffolding" (see
+`mock-scaffolding-vs-authored`). Confirmed no regression on the branch
+actually edited: both of this fixture's branch-2 cases (project name
+mismatch #2, connection folder name mismatch #3) were still caught
+correctly, worded near-identically to prior runs.
+
+The run also missed 3 of the 9 planted issues this time (#7 terminology
+consistency, #8 parallel-section drift, #9 presentation/table
+suggestion) -- all in Step 3's holistic pass, unrelated to the edited
+branch. Consistent with this fixture's own prior note above (8/9 caught
+previously too): Step 3 is a holistic LLM judgment pass with inherent
+run-to-run variance, not a deterministic check. It also surfaced three
+legitimate findings not in the original planted set (Asana connection
+listed as needed but never used; Slack connection never provisioned for
+Exercise B; a create-vs-update-issue contradiction between steps 3 and
+5) -- extra signal, not noise.

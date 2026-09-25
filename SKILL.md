@@ -152,10 +152,20 @@ These branches classify one claim the guide's prose actually makes.
        passing it or guessing from the connector's apparent purpose.
 
 2. **Claim is about a named project/connection/folder that should already
-   be provisioned.**
+   be provisioned, OR the guide instructs the learner to add/create a
+   named recipe asset (a decision-table row, a step, or similar) that
+   isn't a connector action (branch 1) and doesn't reduce to a field/
+   datapill claim (branch 3).**
    Check `pull-result.json` / the pulled project tree.
-   - Exists with matching name → no finding.
-   - Missing or name mismatch → **Bug -- Discrepancy**.
+   - Named project/connection/folder claim: exists with matching name →
+     no finding; missing or name mismatch → **Bug -- Discrepancy**.
+   - Named asset the guide instructs the learner to *create*: does an
+     asset with that exact name already exist in the pulled project?
+     - No → nothing to check yet here; it's genuinely not built.
+     - Yes → apply the scaffolding note below to classify it (**Bug --
+       Discrepancy** if it's an empty, labeled placeholder -- incomplete
+       provisioning, not learner work; **Unverifiable** if it's already
+       filled in -- ambiguous, could be scaffolding or prior work).
 
 3. **Claim references a field/datapill sourced from a specific step** (e.g.
    "map the Issue Key from the trigger" / "from the search step"), or sets
