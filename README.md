@@ -29,7 +29,12 @@ It deliberately does **not** assume a "finished" reference recipe exists, and do
 │   ├── find_connector_skill.sh       # Locates a connector's lint-rules.json in a recipe-skills checkout
 │   └── resolve_folder_id.sh          # Resolves a bare Workato folder id to a project/path
 └── tests/
-    └── fixtures/sample-lab-1/        # Golden test case: a guide with 9 planted issues + expected findings
+    └── fixtures/                     # Eval fixtures -- each a guide + mock pulled-project data + expected-findings.md
+        ├── sample-lab-1/              # Broad golden case: 9 planted issues across most branches
+        ├── real-wel-required-field/   # Required-field-vs-sample-data, grounded in a real tracker report
+        ├── mock-scaffolding-vs-authored/  # Scaffolding vs. learner-authored, tested both directions
+        ├── wk-lint-passthrough/       # Deterministic Bug -- Lab passthrough
+        └── html-multipage-guide/      # Step 1's multi-page HTML discovery
 ```
 
 ## Prerequisites
@@ -72,9 +77,15 @@ Claude will walk you through gathering the guide, the `wk` project, and the Topi
 
 ## Testing
 
-`tests/fixtures/sample-lab-1` is a golden test case: a deliberately flawed lab guide, a mock `recipe-skills` checkout, and a mock pulled starter project, together with `expected-findings.md` — written *before* the skill was run against the fixture, so results are checked against it, not the reverse. It also records the actual dry-run result and what was fixed as a result.
+`tests/fixtures/` holds eval fixtures: each is a deliberately flawed lab guide plus mock pulled-project/`recipe-skills` data, together with an `expected-findings.md` written *before* the skill is run against it — results are checked against that file, not the reverse. Each `expected-findings.md` also records its actual dry-run result (and, where applicable, what real tester report it's grounded in).
 
-To validate a change to `SKILL.md`'s decision logic, run the skill against this fixture and diff the output against `expected-findings.md` before running against a real guide.
+- `sample-lab-1` — a broad golden case, 9 planted issues across most branches.
+- `real-wel-required-field` — required-field-vs-sample-data, grounded in a real, repeated finding from the org's Lab Feedback tracker.
+- `mock-scaffolding-vs-authored` — forces the scaffolding-vs-learner-authored heuristic both directions in one guide.
+- `wk-lint-passthrough` — the deterministic Bug -- Lab passthrough rule.
+- `html-multipage-guide` — Step 1's "is this actually a multi-page site" discovery check.
+
+To validate a change to `SKILL.md`'s decision logic, run the skill against every fixture and diff the output against each `expected-findings.md` before running against a real guide — a fix for one branch can regress another, so check all of them, not just the one you changed.
 
 ## Contributing
 

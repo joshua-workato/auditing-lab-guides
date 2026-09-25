@@ -2,13 +2,15 @@
 
 Grounded in a real, recurring finding from the org's actual Lab Feedback
 tracker (spreadsheet `1DYWipO7MUpc3ZswZmxAONKEjQyHeF7Nx4-cu48X5V-E`,
-"Lab feedback template"), rows 3, 13, 15, 18, 20, 22, 26, 28, 31 -- all
-the same root cause, reported repeatedly by tester "Ben" against the
-real WEL lab.
+"Lab feedback template"). The bug was first reported in row 3 by tester
+**Mary**; tester **Ben** then hit the same root cause repeatedly later
+in the same lab (rows 13, 15, 18, 20, 22, 26, 28, 31), each entry
+referencing back to row 3 ("Same as Row 3") rather than restating the
+error text.
 
-Real tester report (row 3, verbatim): "I get this error when following
-the expression under 1.2.3 #input validation failed: Email value must
-be present (path: code_input.data.leads.11.email)."
+Real tester report (row 3, verbatim, reported by Mary): "I get this error
+when following the expression under 1.2.3 #input validation failed:
+Email value must be present (path: code_input.data.leads.11.email)."
 
 This fixture reconstructs the minimal shape of that bug (fewer sample
 records, same mechanism) rather than reproducing it byte-for-byte:

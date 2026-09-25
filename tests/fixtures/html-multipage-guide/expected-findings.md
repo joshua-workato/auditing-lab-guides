@@ -15,11 +15,11 @@ via the "Continue to Exercise B" link on `index.html`.
 
 ## Expected findings (both require having actually read page2.html)
 
-1. **Bug -- Discrepancy** (branch 4a-1). Page 2 claims a Jira action
+1. **Bug -- Discrepancy** (branch 4a.1). Page 2 claims a Jira action
    called "Escalate Issue." No such action exists in the mock
    `lint-rules.json` for jira (closest real ones: `create_issue`,
    `update_issue`, `add_comment`).
-2. **Bug -- Discrepancy** (branch 3). Page 2 claims the Priority field is
+2. **Bug -- Discrepancy** (branch 4a.3). Page 2 claims the Priority field is
    mapped "from the Gmail trigger's `priority` output." The pulled
    recipe's Gmail trigger only outputs `email_subject`, `email_from`,
    `email_body`, `received_at` -- there is no `priority` field on the
