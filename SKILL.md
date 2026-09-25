@@ -179,9 +179,8 @@ These branches classify one claim the guide's prose actually makes.
 **A note on "already exists" calls in branches 2 and 3, when the pulled
 folder might not be pristine.** If there's any chance the pulled folder
 reflects the requester's own prior work-through of the lab rather than a
-clean starter copy -- ask, don't assume either way -- distinguish what
-*kind* of pre-built content you're looking at before defaulting to
-Unverifiable:
+clean starter copy, don't default straight to Unverifiable -- distinguish
+what *kind* of pre-built content you're looking at first:
 - **Structural scaffolding** -- a schema declaration existing at all, a
   decision-table row that exists with a descriptive `comment`/label but
   empty `conditions`, a step/node/asset simply being present -- is not
@@ -192,10 +191,14 @@ Unverifiable:
   as **Bug -- Discrepancy**, not Unverifiable.
 - **Learner-authored content** -- a filled-in formula body, working code,
   a completed field mapping -- is exactly what a learner produces as they
-  progress through the lab honestly. This is genuinely ambiguous: stay
-  with **Unverifiable** unless the environment's provenance can be
-  confirmed some other way (e.g. comparing against another learner's
-  folder in the same shared project, or asking the requester directly).
+  progress through the lab honestly. This is genuinely ambiguous, and
+  that's fine: don't spend effort trying to resolve it (cross-referencing
+  another folder, asking the requester) before reporting -- this is a
+  screening tool for a team, not a final verdict. Mark it **Unverifiable**,
+  state the ambiguity plainly in the finding itself (what it could be
+  either way), and move on. Surfacing it costs a human a few seconds of
+  triage either way it turns out; silently resolving or omitting it risks
+  losing a real bug.
 
 4. **Claim is about wording, structure, or explanation rather than a
    verifiable fact** → this belongs to Pass 1 (Step 3), not here.
@@ -267,14 +270,14 @@ than one of them at once.
        under 4a uses that term (a filled-in formula body / working code /
        a completed mapping -- the opposite of that note's "scaffolding,"
        which means an *empty*, labeled placeholder). Apply that note's
-       rule, not a new one: stay with **Unverifiable**, don't jump to Bug
-       -- Discrepancy, unless the environment's provenance can be
-       confirmed some other way (ask the requester directly, or compare
-       against another learner's folder in the same shared project). A
-       complete solution sitting where the guide expects unsolved work is
-       exactly as ambiguous as any other learner-authored content -- it
-       does not become more confirmable just because it's a full solution
-       rather than a partial one.
+       rule, not a new one: mark it **Unverifiable**, state plainly in the
+       finding that this could be pre-existing content or the requester's
+       own prior work and either way is worth a quick look, and move on --
+       don't spend effort cross-referencing another folder or asking the
+       requester before reporting it. This is a screening tool for a team,
+       not a final verdict: surfacing an ambiguous finding costs a human a
+       few seconds either way it resolves, while staying silent risks
+       losing a real bug.
 
 Screenshots and other images: don't attempt to verify their content against
 the live Workato UI in either pass -- out of scope for v1, note it only if
