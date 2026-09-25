@@ -1,0 +1,11 @@
+{
+  "_note": "Simplified stand-in for `wk lint --json` output -- not byte-exact, just enough to exercise the deterministic Bug--Lab passthrough rule (SKILL.md Step 2 / Key Principles).",
+  "findings": [
+    {
+      "recipe": "Lead Routing Essentials/new-lead-router",
+      "step": "jira_update_issue",
+      "severity": "error",
+      "message": "Step 'jira_update_issue' references connection 'jira_sandbox_2', which does not exist in this project."
+    }
+  ]
+}
