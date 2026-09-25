@@ -169,7 +169,47 @@ project/connection/folder) and classify it:
        one -- don't stop checking after finding one Unverifiable claim
        about a not-yet-built step.
 
-4. **Claim is about wording, structure, or explanation rather than a
+**A note on "already exists" calls in branches 2 and 3, when the pulled
+folder might not be pristine.** If there's any chance the pulled folder
+reflects the requester's own prior work-through of the lab rather than a
+clean starter copy -- ask, don't assume either way -- distinguish what
+*kind* of pre-built content you're looking at before defaulting to
+Unverifiable:
+- **Structural scaffolding** -- a schema declaration existing at all, a
+  decision-table row that exists with a descriptive `comment`/label but
+  empty `conditions`, a step/node/asset simply being present -- is not
+  something a learner spontaneously creates while working through a lab.
+  An empty, labeled placeholder (e.g. a row named "Park APAC" with no
+  actual condition set) is what *incomplete provisioning* looks like, not
+  what a learner's in-progress work looks like. Treat a contradiction here
+  as **Bug -- Discrepancy**, not Unverifiable.
+- **Learner-authored content** -- a filled-in formula body, working code,
+  a completed field mapping -- is exactly what a learner produces as they
+  progress through the lab honestly. This is genuinely ambiguous: stay
+  with **Unverifiable** unless the environment's provenance can be
+  confirmed some other way (e.g. comparing against another learner's
+  folder in the same shared project, or asking the requester directly).
+
+4. **Claim is implicit in a step's own input schema, not stated anywhere
+   in the guide's prose** -- specifically, a required (non-optional) field
+   on a pre-built step's input schema, checked against the guide's own
+   sample dataset that step is wired to. This doesn't need the guide to
+   say anything wrong; the contradiction is between two things the guide
+   itself provides, and it's a common recurring failure mode (a required
+   field left blank on one sample record breaks every step downstream that
+   shares the same sample data, not just one).
+   - Does the step's input schema mark a field as required (not optional)?
+     - No → nothing to check here.
+     - Yes → does every record in the guide's own sample dataset (the one
+       that step is wired to) have a non-blank value for that field?
+       - Yes → no finding.
+       - No (at least one sample record is blank/missing) → **Bug --
+         Discrepancy** -- cite the step, the required field, and the
+         specific sample record that violates it, and note that this will
+         fail validation the moment the step runs against the full array,
+         not just on that one record.
+
+5. **Claim is about wording, structure, or explanation rather than a
    verifiable fact** → this belongs to Pass 1 (Step 3), not here.
 
 Screenshots and other images: don't attempt to verify their content against

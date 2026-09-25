@@ -44,7 +44,11 @@ testing rounds ("feedback on context setting info in doc, e.g. hook, why").
 Pick one name per UI element/concept and use it everywhere. Watch for the
 same thing called by two names across sections (e.g. "Connections tab" in
 one step, "Connection Manager" in another) — this is confusing even when
-both are technically accurate.
+both are technically accurate. This includes dual numbering/labeling
+schemes for the same structural unit — e.g. a guide that headers a section
+both "Phase 2" and "Phase B" — reported by a real tester as confusing even
+though both labels point at the same section ("I'm unsure if there are 2
+tracks of phases or we are interchanging alphanumeric values").
 
 ## Forward references
 
