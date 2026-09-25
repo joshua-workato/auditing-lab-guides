@@ -1,0 +1,16 @@
+{
+  "_note": "Simplified stand-in for wk-pulled recipe JSON.",
+  "name": "New Lead Router",
+  "trigger": {
+    "name": "new_email_trigger",
+    "provider": "gmail",
+    "output_fields": ["email_subject", "email_from", "email_body", "received_at"]
+  },
+  "actions": [
+    {
+      "name": "search_issues",
+      "provider": "jira",
+      "output_fields": ["issue_key", "issue_summary", "issue_status"]
+    }
+  ]
+}
