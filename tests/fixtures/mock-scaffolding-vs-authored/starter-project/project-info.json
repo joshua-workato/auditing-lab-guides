@@ -1,0 +1,6 @@
+{
+  "_note": "Simplified stand-in for what `wk pull` produces.",
+  "project_name": "Lead Routing Essentials",
+  "connections_folder": "[Lead Routing] Connections",
+  "connections": ["Gmail", "Jira", "Asana"]
+}

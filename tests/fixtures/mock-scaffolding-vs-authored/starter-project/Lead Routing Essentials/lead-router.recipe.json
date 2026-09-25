@@ -1,0 +1,17 @@
+{
+  "_note": "Simplified stand-in for wk-pulled recipe JSON -- built to exercise the scaffolding-vs-learner-authored heuristic (SKILL.md note under 4a branches 2/3, and the 4b.3 exercise-completeness check). Not byte-exact.",
+  "name": "Route by Region",
+  "decision_table": {
+    "rows": [
+      { "comment": "Route EMEA leads to the EMEA queue", "conditions": { "region": "EMEA" } },
+      { "comment": "Route NA leads to the NA queue", "conditions": { "region": "NA" } },
+      { "comment": "Park APAC", "conditions": {} }
+    ]
+  },
+  "formula_steps": [
+    {
+      "name": "Assign Priority",
+      "formula": "if (input.deal_value > 10000) { output.priority = 'high'; } else { output.priority = 'normal'; }"
+    }
+  ]
+}

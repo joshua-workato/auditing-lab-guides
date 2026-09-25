@@ -1,0 +1,21 @@
+{
+  "_note": "Simplified stand-in for wk-pulled recipe JSON -- not byte-exact, just enough to exercise the required-field-vs-sample-data check (SKILL.md branch 4b.1).",
+  "name": "Validate Lead",
+  "steps": [
+    {
+      "name": "code_step",
+      "type": "code",
+      "input_field": "code_input",
+      "input_schema": {
+        "data.leads": {
+          "type": "array",
+          "item_properties": [
+            { "name": "name", "required": false },
+            { "name": "email", "required": true },
+            { "name": "company", "required": false }
+          ]
+        }
+      }
+    }
+  ]
+}
