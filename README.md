@@ -27,14 +27,16 @@ It deliberately does **not** assume a "finished" reference recipe exists, and do
 ├── scripts/
 │   ├── pull_and_lint.sh              # wk pull + wk lint, writes structured JSON ground truth
 │   ├── find_connector_skill.sh       # Locates a connector's lint-rules.json in a recipe-skills checkout
-│   └── resolve_folder_id.sh          # Resolves a bare Workato folder id to a project/path
+│   ├── resolve_folder_id.sh          # Resolves a bare Workato folder id to a project/path
+│   └── check_prereqs.sh              # Verifies the shell-checkable prerequisites before a run
 └── tests/
     └── fixtures/                     # Eval fixtures -- each a guide + mock pulled-project data + expected-findings.md
         ├── sample-lab-1/              # Broad golden case: 9 planted issues across most branches
         ├── real-wel-required-field/   # Required-field-vs-sample-data, grounded in a real tracker report
         ├── mock-scaffolding-vs-authored/  # Scaffolding vs. learner-authored, tested both directions
         ├── wk-lint-passthrough/       # Deterministic Bug -- Lab passthrough
-        └── html-multipage-guide/      # Step 1's multi-page HTML discovery
+        ├── html-multipage-guide/      # Step 1's multi-page HTML discovery
+        └── advanced-tier-no-steps/    # Tier-aware rule: advanced tasks may omit detailed Steps
 ```
 
 ## Prerequisites
@@ -57,12 +59,17 @@ git clone https://github.com/workato-devs/recipe-skills.git
 export RECIPE_SKILLS_DIR="$(pwd)/recipe-skills"
 ```
 
+Optionally export `LAB_FEEDBACK_TEMPLATE_ID` if you already know the shared template's Drive file id, to skip searching for it by title on every run (never commit an actual id here — this repo is public).
+
+Run `scripts/check_prereqs.sh` to verify everything above that's actually checkable from the shell (`wk` install/auth, `$RECIPE_SKILLS_DIR`) before starting an audit — it prints what's missing instead of failing mid-run. It can't check the Sheets/Drive MCP tools or the `recipe-lint` plugin, so it reminds you to confirm those yourself.
+
 > **Note:** the Sheets/Drive connector requirement and the shared template are specific to this org's Workato Google Workspace. Outside that environment, Step 5 of `SKILL.md` falls back to a markdown table (`references/output-sheet-format.md`) instead of failing silently.
 
 ## Setup
 
 ```bash
 git clone https://github.com/joshua-workato/auditing-lab-guides.git
+./auditing-lab-guides/scripts/check_prereqs.sh
 ```
 
 Then make this repo available to Claude as a skill (e.g. drop it in your Claude Code skills directory, or upload it as a skill package on claude.ai). Claude reads `SKILL.md`'s frontmatter to decide when to trigger it, and loads the full body only once triggered — you don't need to do anything with this README for the skill itself to work.
@@ -84,6 +91,7 @@ Claude will walk you through gathering the guide, the `wk` project, and the Topi
 - `mock-scaffolding-vs-authored` — forces the scaffolding-vs-learner-authored heuristic both directions in one guide.
 - `wk-lint-passthrough` — the deterministic Bug -- Lab passthrough rule.
 - `html-multipage-guide` — Step 1's "is this actually a multi-page site" discovery check.
+- `advanced-tier-no-steps` — tier-aware rule: `advanced`/`extension`-tier tasks may omit detailed Steps entirely; the audit must not flag that as incomplete.
 
 To validate a change to `SKILL.md`'s decision logic, run the skill against every fixture and diff the output against each `expected-findings.md` before running against a real guide — a fix for one branch can regress another, so check all of them, not just the one you changed.
 
