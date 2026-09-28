@@ -84,3 +84,15 @@ findings**, same classifications as before (Bug for the empty
 scaffolded row, Unverifiable for the complete formula) -- now via a
 direct branch match instead of analogizing from the scaffolding note's
 worked example.
+
+## Regression re-run (2026-09-28, after Sheet-id redaction + tier-awareness)
+
+Re-ran blind after the same `SKILL.md` edits noted in `sample-lab-1`'s
+regression entry (none touch this fixture's branches). **PASS on both
+findings again** -- empty "Park APAC" row correctly classified Bug --
+Discrepancy (with the same EMEA/NA-row contrast reasoning as before),
+complete "Assign Priority" formula correctly classified Unverifiable.
+Also reproduced the same bonus pattern documented in the original dry
+run: declining to guess on the two narrative claims (5.2.2, 5.3.2) that
+presuppose sample data this fixture never supplied, marking both
+Unverifiable rather than fabricating a verdict.

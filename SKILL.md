@@ -26,6 +26,11 @@ This skill:
   should look like.
 - ❌ Is not a recurring or scheduled check. Run it fresh each time a human
   asks -- it does not monitor for platform drift over time.
+- ❌ Does not flag a missing detailed-steps section as a structural
+  problem without checking tier first. Bakery's authoring contract allows
+  `advanced`/`extension`-tier tasks to omit detailed Steps entirely (the
+  learner builds from the Walkthrough alone) -- see the tier note in
+  Step 3.
 
 # Prerequisites
 
@@ -45,12 +50,16 @@ stalling mid-audit on a missing dependency:
   copy. Step 5 has a documented (less ideal) fallback for a missing Drive
   tool, so don't treat its absence as blocking the way a missing Sheets
   tool is -- just tell the person the output won't be pre-formatted.
-- Read access to the shared template file (Step 5 has its id) -- it's
-  shared at the team level (link-shared or via a team group), not tied to
-  one person's account, so this should already work for anyone on the
-  team without extra setup. If copying it fails with a permissions error,
-  that's a sharing gap to raise with whoever owns the template, not
-  something to route around with a personal copy.
+- Read access to the shared template file (Step 5 documents how to find
+  it) -- it's shared at the team level (link-shared or via a team group),
+  not tied to one person's account, so this should already work for
+  anyone on the team without extra setup. If copying it fails with a
+  permissions error, that's a sharing gap to raise with whoever owns the
+  template, not something to route around with a personal copy.
+- Optionally, `LAB_FEEDBACK_TEMPLATE_ID` set in the environment if you
+  already know the template's Drive file id -- skips the search in Step 5.
+  Never commit an actual id into this repo; it's team-shared knowledge,
+  not a literal in source, since this repo is public.
 - The **Topic** label decided (see Step 1.4).
 
 # Core Workflow
@@ -99,6 +108,17 @@ Anything `wk lint` reports is automatically a **Bug -- Lab** finding. Don't
 re-derive or second-guess these; they're deterministic.
 
 ## Step 3: Pass 1 -- Holistic guide review
+
+**Check tier before judging structural completeness.** Bakery labs declare a
+`tier`: `foundational | intermediate | advanced | extension`. Look for it in
+markdown frontmatter (`tier: ...`) or, in pressed HTML, the tier badge
+(`<span class="attr-tier">`, e.g. "●●○ Intermediate"). Tier changes what's
+required: `advanced`/`extension` tasks may legitimately have no detailed
+Steps section at all -- the learner is meant to build from the Walkthrough
+alone. Don't flag that omission as a presentation or completeness problem
+for those tiers. If no tier is findable (e.g. an older guide predating this
+convention), fall back to today's behavior -- treat structural completeness
+as normal, don't guess a tier.
 
 Read the entire guide once, start to finish, before flagging anything. Load
 `references/presentation-rubric.md` and check for:
@@ -368,18 +388,18 @@ don't silently skip mentioning this.
 - If a more capable Sheets connector is ever connected in a given
   environment, prefer it for this step instead.
 
-1. Find the template. It's a known, shared file so use its id directly
-   rather than searching each run:
-   `1LCRe69QVR9FbMcOH7GiCMLcd9CJWdzKh0JKAQBbwGHQ`
-   ("Lab Feedback Template (blank)", link:
-   https://docs.google.com/spreadsheets/d/1LCRe69QVR9FbMcOH7GiCMLcd9CJWdzKh0JKAQBbwGHQ/edit ).
-   This id can go stale if the template is ever deleted/recreated -- if
-   copying it 404s or errors, don't guess a replacement: fall back to
-   searching Drive for a spreadsheet titled exactly "Lab Feedback Template
-   (blank)" (owned by the team, not a personal copy), and if more than one
-   candidate turns up or none does, confirm with the person before
-   proceeding rather than silently falling back to a blank
-   `create_spreadsheet`.
+1. Find the template. If `LAB_FEEDBACK_TEMPLATE_ID` is set in the
+   environment, use that file id directly and skip straight to copying it
+   -- this is the fast path for someone who already knows it. Otherwise,
+   search Drive for a spreadsheet titled exactly "Lab Feedback Template
+   (blank)" (owned by the team, not a personal copy). Either way, if the
+   id 404s/errors, or the search turns up more than one candidate or none,
+   don't guess: confirm with the person before proceeding rather than
+   silently falling back to a blank `create_spreadsheet`.
+
+   Note for maintainers: don't put the actual file id as a literal
+   anywhere in this repo (it's public) -- the env var above is the only
+   supported way to skip the search.
 2. Copy it (Drive copy-file), titled `Lab Feedback -- <guide name> --
    <today's date>`. If the person has said where it should live, pass that
    as the destination folder. Otherwise leave the destination unspecified

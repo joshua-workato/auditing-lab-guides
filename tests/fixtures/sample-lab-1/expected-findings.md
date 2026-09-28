@@ -67,3 +67,21 @@ legitimate findings not in the original planted set (Asana connection
 listed as needed but never used; Slack connection never provisioned for
 Exercise B; a create-vs-update-issue contradiction between steps 3 and
 5) -- extra signal, not noise.
+
+## Regression re-run (2026-09-28, after Sheet-id redaction + tier-awareness)
+
+Re-ran blind after editing `SKILL.md` to (a) redact the hardcoded Sheet
+template id from Step 5, (b) add the tier-awareness note to Step 3, and
+(c) reference `scripts/check_prereqs.sh`. None of these edits touch
+branches 1-3 or 4a/4b's decision logic. **9 of 9 planted issues caught**
+-- the strongest result recorded for this fixture yet (prior runs: 8/9,
+then 6/9). All four Bug -- Discrepancy findings, both Unverifiable
+findings (including the four-field-value Slack claim, not just the
+first), both Internal-consistency findings, and the table-suggestion
+finding were all present and correctly classified. It also caught the
+same class of legitimate bonus findings noted in the prior regression
+run (Asana connection unused; a create-vs-update-issue contradiction
+between steps 3-5), plus new ones (terminology drift across
+issue/ticket/task; a second table-suggestion in Exercise A step 4;
+noting the guide may be an under-adapted template). No fabrication, no
+misclassification.
