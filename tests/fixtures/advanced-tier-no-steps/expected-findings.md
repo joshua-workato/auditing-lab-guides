@@ -36,3 +36,24 @@ missing Steps section as incomplete, missing, or a presentation problem;
 omission to `tier: advanced`, not to an authoring gap; (c) no fabricated
 findings from the vague Workato-specific claims in the Walkthrough text,
 given no starter project was supplied.
+
+## Actual dry-run result (2026-09-28)
+
+Run by a fresh `general-purpose` agent with no prior context and no
+visibility into this file -- given only `SKILL.md`'s rules verbatim plus
+this fixture's `guide.md`.
+
+**PASS.** Correctly read `tier: advanced` from frontmatter and explicitly
+declined to flag either task's missing Steps section, citing the
+tier-awareness rule and noting the guide's own Intent text ("recognizing
+the pattern without a walkthrough of every click") reinforces the
+design intent. Zero Bug findings. It did not just blanket-suppress
+criticism for the tier, though -- it still raised three unrelated,
+legitimate Suggestion -- Presentation findings (a Verifier only checking
+one side of a two-outcome promise; an unexplained cross-lab "Task 1.1"
+reference; a Takeaway generalizing beyond the single condition shown),
+correctly distinguishing "no Steps section" (allowed) from "other
+quality issues" (still in scope). Coverage confirmed 0 checkable
+Workato-specific claims, consistent with no starter project being
+supplied and the guide's Walkthrough language being intentionally
+generic.

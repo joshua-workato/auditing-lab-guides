@@ -53,3 +53,17 @@ claimed from the Gmail trigger's nonexistent `priority` output (cited
 against the trigger's actual schema). It also connected Exercise A's
 "review the trigger's output fields" instruction to Exercise B's broken
 claim as a presentation issue -- accurate, not fabricated.
+
+## Regression re-run (2026-09-28, after Sheet-id redaction + tier-awareness)
+
+Re-ran blind after the same `SKILL.md` edits noted in `sample-lab-1`'s
+regression entry (none touch Step 1's multi-page discovery instruction).
+**PASS.** Discovered `page2.html` via the "Continue to Exercise B" link
+unaided, confirmed via directory listing that only two pages exist.
+Both planted bugs found and correctly classified Bug -- Discrepancy:
+the nonexistent "Escalate Issue" Jira action (cited against
+`lint-rules.json`), and the Priority field falsely sourced from the
+Gmail trigger's nonexistent `priority` output (cited against the
+trigger's actual schema). Also caught legitimate bonus findings:
+a title-tag mismatch between the two pages (Internal Consistency), and
+two Presentation suggestions (missing "why," prose-vs-table).

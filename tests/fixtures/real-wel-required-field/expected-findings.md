@@ -57,3 +57,15 @@ step's actual code logic isn't visible in the pulled schema, only its
 declared input fields), and two in-scope **Presentation** suggestions
 (undefined term "routing schema"; inconsistent scope wording between
 1.2.2 and 1.2.3). Nothing fabricated or out of scope.
+
+## Regression re-run (2026-09-28, after Sheet-id redaction + tier-awareness)
+
+Re-ran blind after the same `SKILL.md` edits noted in `sample-lab-1`'s
+regression entry (none touch branch 4b.1's logic). **PASS.** Independently
+found the required Bug -- Discrepancy again (Barbara Lin's blank
+`email` against the "Validate Lead" step's required-field schema),
+correctly classified, with the same reasoning depth as the prior run.
+No other findings this time (the prior run's bonus Internal-Consistency
+and Presentation suggestions didn't recur) -- consistent with Step 3
+being a holistic judgment pass with run-to-run variance, not a
+deterministic check; the required finding itself was unaffected.

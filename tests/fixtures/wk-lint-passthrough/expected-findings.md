@@ -45,3 +45,14 @@ the lint result showing a broken connection -- marked **Unverifiable**
 (not a hard Bug, since intent can't be determined from an excerpt),
 with an explicit caveat that only a partial guide excerpt was provided.
 Reasonable, not fabricated, correctly hedged.
+
+## Regression re-run (2026-09-28, after Sheet-id redaction + tier-awareness)
+
+Re-ran blind after the same `SKILL.md` edits noted in `sample-lab-1`'s
+regression entry (none touch Step 2's passthrough rule). **PASS.**
+Exactly one Bug -- Lab finding, linter's message passed through
+verbatim, correctly cited to `Lead Routing Essentials/new-lead-router`
+step `jira_update_issue`. This run didn't reproduce the prior run's
+bonus Unverifiable finding (Section 6 contradicting the lint result) --
+consistent with Step 3 being a holistic judgment pass with run-to-run
+variance; the required deterministic passthrough was unaffected.
